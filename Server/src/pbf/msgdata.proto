@@ -1,0 +1,221 @@
+syntax="proto3";                //Proto协议
+package pbf;                    //当前包名
+option csharp_namespace="Pb";   //给C#提供的选项
+
+enum MSGID {
+    SIGNUP = 0;
+    SIGNIN = 1;
+    ROOMINFO = 2;
+    CREATEROOM = 3;
+    ENTERROOM = 4;
+    LEAVEROOM = 5;
+    ISREADY = 6;
+    HEART = 7;
+
+    STARTGAME = 20;
+    SETPID = 21;
+    LOADMAP = 22;
+    GAMEFIN = 23;
+    SYNCPHV = 24;
+    HWAVEWEAPON = 25;
+    PLACECUBE = 26;
+    ATK = 27;
+    COLLISION = 28;
+    ADDSCORE = 29;
+    VOICE = 30;
+
+    BROROOMCHANGE = 104;
+    BROISREADY = 106;
+
+    BROENTERGAME = 122;
+    BROGAMETIME = 123;
+    BROSYNCPHV = 124;
+    BROHWAVEWEAPON = 125;
+    BROPLACEWEAPON = 126;
+    BROATK = 127;
+    BROCOLLISION = 128;
+    BROADDSCORE = 129;
+    BROVOICE = 130;
+}
+
+//注册账户
+message SignUp {
+    string UID = 1;
+    string Password = 2;
+    string Name = 3;
+}
+
+//登录账户
+message SignIn{
+    string UID = 1;
+    string Password = 2;
+}
+
+//用户信息
+message User {
+  string UID = 1;
+  string Password = 2;
+  string Name = 3;
+  int32 Rank = 4;
+  int32 EXP = 5;
+  int32 HeadIcon = 6;
+}
+
+//登录/注册是否成功
+message SignSucc {
+  bool Flag = 1;
+  User UserInfo = 2;
+}
+
+
+//玩家位置和移动速度
+message Player {
+    Vector Pos = 1;
+    Vector Rot = 2;
+    float Speed = 3;
+    int32 Pid = 4;
+    float HP = 5;
+}
+
+//向量
+message Vector {
+    float X = 1;
+    float Y = 2;
+    float Z = 3;
+}
+
+//玩家举起方块
+message HaveWeapon {
+     int32 PID = 1;
+     int32 CID = 2;
+}
+
+//玩家广播的数据
+message PlayerAtk{
+	int32 Pid = 1;
+    Vector AttackDir = 2;
+}
+
+//创建/进入/离开房间
+message Room {
+  int32 Rid = 1;
+}
+
+//房间信息
+message RoomInfo {
+    int32 Id = 1;	    //房间id
+    int32 Nums = 2;	    //房间人数
+    string OwnerName = 3;  //房主Name
+}
+
+//房间列表信息
+message RoomList {
+    repeated RoomInfo roomlist = 1;
+}
+
+//房间玩家信息
+message RoomPlayer {
+  string UID = 1;
+  string Name = 2;
+  int32 Rank = 3;
+  bool IsReady = 4;
+  bool IsOwner = 5;
+  int32 HeadIcon = 6;
+}
+
+message EnterRoom {
+    bool flag = 1;
+    repeated RoomPlayer PlayerList = 2;
+}
+
+// 发送各种是否成功或者标识指令
+message Sync {
+  bool Tag = 1;
+}
+
+message IsReady {
+    string UID = 1;
+    bool Ready = 2;
+}
+
+//进入游戏
+message EnterGame {
+  repeated GamePlayer playerList = 1;
+  int32 Seed1 = 2;
+}
+
+
+message GamePlayer {
+  string UID = 1;
+  int32 PID = 2;
+}
+
+
+message GameTime {
+  int32 TimeLeft = 1;
+}
+
+//更新玩家分数
+message PlayerPoint {
+  string UID = 1;
+  int32 Point = 2;
+}
+
+//更新玩家分数
+message PlayerKill {
+  string SUID = 1;  //杀人者
+  string PUID = 2;  //被杀者
+  int32 Point = 3;  //得分
+}
+
+
+//测试移动
+message BroadCastMove{
+	repeated Player PlayerInfo = 1;
+}
+
+//方块
+message Cube {
+  int32 CID = 1;
+  Vector Pos = 2;
+  Vector Rot = 3;
+}
+
+message Cubes {
+    repeated int32 CId = 1;
+}
+
+//方块碰撞时
+message CubeColl {
+  int32 CID = 1;
+  Vector CubePos = 2;
+  int32 PID = 3;
+  bool Flag = 4;    //true表示击中玩家，false表示击中地面
+}
+
+//游戏结算得分
+message GameSettle {
+    string UID = 1;
+    string Name = 2;
+    int32 Score = 3;
+    int32 EXP = 4;
+    int32 Rank = 5;
+    int32 HeadIcon = 6;
+    int32 AddEXP = 7;
+}
+
+//游戏结算得分数组
+message GameSettleArr {
+    repeated GameSettle AllData = 1;
+}
+
+//玩家说话
+message TalkVoice {
+    int32 PID = 1;
+    int32 VID = 2;
+}
+
+
+//https://blog.csdn.net/weixin_42117918/article/details/88920221
+//protoc --go_out=. msgdata.proto
+

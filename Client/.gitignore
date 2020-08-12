@@ -1,0 +1,9 @@
+.vs
+Assembly-CSharp.csproj
+Client.sln
+Library
+Logs
+obj
+Packages
+/Assembly-CSharp-Editor.csproj
+Temp
